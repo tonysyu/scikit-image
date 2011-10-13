@@ -57,6 +57,5 @@ def test_divide_array_scalar():
 
 
 if __name__ == '__main__':
-    import nose
-    nose.runmodule()
+    np.testing.run_module_suite()
 
