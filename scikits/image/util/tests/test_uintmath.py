@@ -12,6 +12,7 @@ def test_is_uint8_like():
     assert not is_uint8_like(-1)
     assert not is_uint8_like(1.)
 
+
 def test_add_scalars():
     a = 150
     assert add_uint(a, a) == 255
@@ -54,6 +55,29 @@ def test_divide_array_scalar():
     b = 3
     c = (0, 0, 1, 1, 1, 2, 2, 2, 3, 3)
     assert all(divide_uint(a, b) == c)
+
+
+def test_add_arrays():
+    a = np.array([(125, 126, 127), (128, 129, 130)])
+    c = [[250, 252, 254], [255, 255, 255]]
+    assert np.all(add_uint(a, a) == c)
+
+def test_subtract_arrays():
+    a = np.array([(1, 2, 3), (4, 5, 6)])
+    b = np.array([(6, 5, 4), (3, 2, 1)])
+    c = [[0, 0, 0], [1, 3, 5]]
+    assert np.all(subtract_uint(a, b) == c)
+
+def test_multiply_arrays():
+    a = np.array([(14, 15), (16, 17)])
+    c = [(14**2, 15**2), (255, 255)]
+    assert np.all(multiply_uint(a, a) == c)
+
+def test_divide_arrays():
+    a = np.array([(7, 8), (149, 150)])
+    b = np.array([(5, 5), (100, 100)])
+    c = [(1, 2), (1, 2)]
+    assert np.all(divide_uint(a, b) == c)
 
 
 if __name__ == '__main__':

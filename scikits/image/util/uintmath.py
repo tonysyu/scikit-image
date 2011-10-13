@@ -26,6 +26,12 @@ def add_uint(a, b):
     elif np.isscalar(a):
         return np.uint8(np.clip(b, MIN_UINT, MAX_UINT - a) + a)
 
+    c = np.empty(a.shape, dtype=np.uint8)
+    mask = a < (MAX_UINT - b)
+    c[~mask] = MAX_UINT
+    c[mask] = a[mask] + b[mask]
+    return c
+
 
 def subtract_uint(a, b):
     """Subtract two uint arrays. Underflow is clipped."""
@@ -35,6 +41,12 @@ def subtract_uint(a, b):
         return np.uint8(np.clip(a, MIN_UINT + b, MAX_UINT) - b)
     elif np.isscalar(a):
         return np.uint8(a - np.clip(b, MIN_UINT,  MIN_UINT + a))
+
+    c = np.empty(a.shape, dtype=np.uint8)
+    mask = a > (MIN_UINT + b)
+    c[~mask] = MIN_UINT
+    c[mask] = a[mask] - b[mask]
+    return c
 
 
 def multiply_uint(a, b):
@@ -50,12 +62,12 @@ def multiply_uint(a, b):
     if np.isscalar(a):
         a, b = b, a
 
-    if np.isscalar(b):
-        maxval = np.floor(MAX_UINT / b)
-        mask = a <= maxval
-        c = np.empty(a.shape, dtype=np.uint8)
-        c[~mask] = MAX_UINT
-        c[mask] = a[mask] * b
+    c = np.empty(a.shape, dtype=np.uint8)
+    mask = a <= MAX_UINT / b
+    c[~mask] = MAX_UINT
+    if not np.isscalar(b):
+        b = b[mask]
+    c[mask] = a[mask] * b
     return c
 
 
