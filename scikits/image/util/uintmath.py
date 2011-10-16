@@ -31,7 +31,7 @@ def add_uint(a, b):
     c = np.empty(a.shape, dtype=np.uint8)
     mask = a < (MAX_UINT - b)
     c[~mask] = MAX_UINT
-    c[mask] = a[mask] + b[mask]
+    c[mask] = np.uint8(a[mask] + b[mask])
     return c
 
 
@@ -47,7 +47,7 @@ def subtract_uint(a, b):
     c = np.empty(a.shape, dtype=np.uint8)
     mask = a > (MIN_UINT + b)
     c[~mask] = MIN_UINT
-    c[mask] = a[mask] - b[mask]
+    c[mask] = np.uint8(a[mask] - b[mask])
     return c
 
 
@@ -69,7 +69,7 @@ def multiply_uint(a, b):
     c[~mask] = MAX_UINT
     if not np.isscalar(b):
         b = b[mask]
-    c[mask] = a[mask] * b
+    c[mask] = np.uint8(a[mask] * b)
     return c
 
 

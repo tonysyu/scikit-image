@@ -44,14 +44,14 @@ def test_subtract_array_scalar():
     assert all(subtract_uint(b, a) == d)
 
 def test_multiply_array_scalar():
-    a = np.arange(0, 5, dtype=np.uint8)
+    a = np.arange(0, 5)
     b = 100
     c = (0, 100, 200, 255, 255)
     assert all(multiply_uint(a, b) == c)
     assert all(multiply_uint(b, a) == c)
 
 def test_divide_array_scalar():
-    a = np.arange(0, 10, dtype=np.uint8)
+    a = np.arange(0, 10)
     b = 3
     c = (0, 0, 1, 1, 1, 2, 2, 2, 3, 3)
     assert all(divide_uint(a, b) == c)
