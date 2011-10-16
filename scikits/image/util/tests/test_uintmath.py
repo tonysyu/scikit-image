@@ -80,6 +80,23 @@ def test_divide_arrays():
     assert np.all(divide_uint(a, b) == c)
 
 
+def test_add_edge_cases():
+    a = np.arange(4)
+    c = (253, 254, 255, 255)
+    assert all(add_uint(a, 253) == c)
+
+def test_subtract_edge_cases():
+    a = np.arange(4)
+    c = (2, 1, 0, 0)
+    assert all(subtract_uint(2, a) == c)
+
+def test_multiply_edge_cases():
+    a = np.array([2, 5, 2])
+    b = np.array([127, 51, 128])
+    c = (254, 255, 255)
+    assert all(multiply_uint(a, b) == c)
+
+
 if __name__ == '__main__':
     np.testing.run_module_suite()
 
