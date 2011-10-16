@@ -1,6 +1,8 @@
 import numpy as np
 
 
+__all__ = ['add_uint', 'subtract_uint', 'multiply_uint', 'divide_uint']
+
 MIN_UINT = 0
 MAX_UINT = 255
 
@@ -18,7 +20,7 @@ def is_uint8_like(a):
 
 
 def add_uint(a, b):
-    """Add two uint arrays. Overflow is clipped."""
+    """Add two uint8 arrays. Overflow is clipped."""
     assert is_uint8_like(a) and is_uint8_like(b)
 
     if np.isscalar(b):
@@ -34,7 +36,7 @@ def add_uint(a, b):
 
 
 def subtract_uint(a, b):
-    """Subtract two uint arrays. Underflow is clipped."""
+    """Subtract two uint8 arrays. Underflow is clipped."""
     assert is_uint8_like(a) and is_uint8_like(b)
 
     if np.isscalar(b):
@@ -50,7 +52,7 @@ def subtract_uint(a, b):
 
 
 def multiply_uint(a, b):
-    """Multiply two uint arrays. Overflow is clipped."""
+    """Multiply two uint8 arrays. Overflow is clipped."""
     assert is_uint8_like(a) and is_uint8_like(b)
 
     if np.isscalar(a) and np.isscalar(b):
@@ -72,7 +74,7 @@ def multiply_uint(a, b):
 
 
 def divide_uint(a, b):
-    """Divide two uint arrays. Output is rounded (as opposed to floored)."""
+    """Divide two uint8 arrays. Output is rounded (as opposed to floored)."""
     assert is_uint8_like(a) and is_uint8_like(b)
     return np.uint8((a + b / 2) / b)
 
