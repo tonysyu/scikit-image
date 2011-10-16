@@ -20,7 +20,11 @@ def is_uint8_like(a):
 
 
 def add_uint(a, b):
-    """Add two uint8 arrays. Overflow is clipped."""
+    """Add two uint8 arrays. Overflow is clipped.
+
+    Non-uint8 integer inputs are allowed, as long as they are between 0 and
+    255. Output is guaranteed to be uint8.
+    """
     assert is_uint8_like(a) and is_uint8_like(b)
 
     if np.isscalar(b):
@@ -36,7 +40,11 @@ def add_uint(a, b):
 
 
 def subtract_uint(a, b):
-    """Subtract two uint8 arrays. Underflow is clipped."""
+    """Subtract two uint8 arrays. Underflow is clipped.
+
+    Non-uint8 integer inputs are allowed, as long as they are between 0 and
+    255. Output is guaranteed to be uint8.
+    """
     assert is_uint8_like(a) and is_uint8_like(b)
 
     if np.isscalar(b):
@@ -52,7 +60,11 @@ def subtract_uint(a, b):
 
 
 def multiply_uint(a, b):
-    """Multiply two uint8 arrays. Overflow is clipped."""
+    """Multiply two uint8 arrays. Overflow is clipped.
+
+    Non-uint8 integer inputs are allowed, as long as they are between 0 and
+    255. Output is guaranteed to be uint8.
+    """
     assert is_uint8_like(a) and is_uint8_like(b)
 
     if np.isscalar(a) and np.isscalar(b):
@@ -74,7 +86,11 @@ def multiply_uint(a, b):
 
 
 def divide_uint(a, b):
-    """Divide two uint8 arrays. Output is rounded (as opposed to floored)."""
+    """Divide two uint8 arrays. Output is rounded (as opposed to floored).
+
+    Non-uint8 integer inputs are allowed, as long as they are between 0 and
+    255. Output is guaranteed to be uint8.
+    """
     assert is_uint8_like(a) and is_uint8_like(b)
     return np.uint8((a + b / 2) / b)
 
