@@ -1,8 +1,8 @@
 import numpy as np
 
-from scikits.image.util.uintmath import is_uint8_like
-from scikits.image.util.uintmath import add_uint, subtract_uint
-from scikits.image.util.uintmath import multiply_uint, divide_uint
+from skimage.util.uintmath import is_uint8_like
+from skimage.util.uintmath import add_uint, subtract_uint
+from skimage.util.uintmath import multiply_uint, divide_uint
 
 
 def test_is_uint8_like():
