@@ -12,8 +12,7 @@ def configuration(parent_package='', top_path=None):
     config.add_data_dir('tests')
 
     cython(['ext.pyx'], working_path=base_path)
-    args = ["-ffast-math "
-            "-I/Developer/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/"]
+    args = ["-ffast-math -msse3"]
     config.add_extension('ext', sources=['ext.c'],
                          extra_compile_args=args,
                          include_dirs=[get_numpy_include_dirs()])

@@ -1,1 +1,1 @@
-from ext import convolve
+from ext import pyconvolve

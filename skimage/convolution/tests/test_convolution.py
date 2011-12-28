@@ -1,9 +1,10 @@
-from skimage.convolution import convolve
+from skimage.convolution import pyconvolve
 import numpy as np
+from numpy import testing
 import numpy.random as random
-import cv
 import time
-from numpy.testing import *
+
+import cv
 
 kernel = np.array([
     [20, 50, 80, 50, 20, 1], 
@@ -25,7 +26,7 @@ anchor = (0, 0)
 
 
 t = time.time()
-convolve(a, b, kernel, anchor=anchor)
+pyconvolve(a, b, kernel, anchor=anchor)
 print "sc", (time.time() - t)*1E3
 
 t = time.time()
@@ -55,12 +56,12 @@ for i in range(100000):
     anchor = (random.randint(0, kx),random.randint(0, ky))
     print (ky, kx), (image_y, image_x), anchor
     print "sci"
-    convolve(image, sci_out, kernel, anchor=anchor)
+    pyconvolve(image, sci_out, kernel, anchor=anchor)
     print "cv"
     cv.Filter2D(image, cv_out, kernel, anchor=anchor)
-    assert_equal(np.sum(sci_out - cv_out), 0)
+    testing.assert_equal(np.sum(sci_out - cv_out), 0)
 
 
-
-
+if __name__ == '__main__':
+    testing.run_module_suite()
 

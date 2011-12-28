@@ -52,7 +52,7 @@ void convolve(float* src, float* dst, float* kernel, int width, int height,
     float value;
     // buffer width aligned to 4 bytes
     int w_aligned = (int)(ceil(width / 4.0) * 4);
-    float* out_buffer = (float*) memalign(16, w_aligned * sizeof(float));
+    float* out_buffer = (float*) malloc(w_aligned * sizeof(float));
     // anchor as (-1, -1) indicates the middle of kernel
     if ((anchor_x == -1) && (anchor_y == -1)) {
         anchor_x = kernel_width / 2;
@@ -61,7 +61,7 @@ void convolve(float* src, float* dst, float* kernel, int width, int height,
     for(k = 0; k < filter_length; k++ ) {
         offsets[k] = (k % kernel_width) - anchor_x + (k / kernel_width - anchor_y)*width;
         offset_row[k] = (k / kernel_width - anchor_y);
-        buffer[k] = (float*) memalign(16, w_aligned * sizeof(float));
+        buffer[k] = (float*) malloc(w_aligned * sizeof(float));
     }
     for (y = 0; y < height; y++) {
         src_row = src + y * width;
