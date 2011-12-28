@@ -1,5 +1,7 @@
 #include <xmmintrin.h>
-#include <malloc.h>
+#if !defined(__APPLE__)
+    #include <malloc.h>
+#endif
 
 #include <math.h>
 
