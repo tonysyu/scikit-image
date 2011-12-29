@@ -1,67 +1,92 @@
-from skimage.convolution import pyconvolve
-import numpy as np
-from numpy import testing
-import numpy.random as random
+import contextlib
 import time
 
-import cv
+import numpy as np
+from numpy import testing
+from numpy.testing import assert_array_almost_equal as assert_close
+
+from scipy.ndimage import convolve as ndconvolve
+from skimage.convolution import pyconvolve
+
+try:
+    import cv
+    opencv_available = True
+except ImportError:
+    opencv_available = False
+
 
 kernel = np.array([
-    [20, 50, 80, 50, 20, 1], 
-    [50, 100, 140, 100, 50, 1], 
-    [90, 160, 200, 160, 90, 1], 
-    [50, 100, 140, 100, 50, 1], 
-    [20, 50, 80, 50, 20, 1]], dtype=np.float32)
-    
-
-size = (4, 4)
-#a = np.ones(size, dtype=np.float32)
-#a = np.ones(size, dtype=np.float32)
-#a = np.arange(2, size[0]*size[1]+2).reshape(*size).astype(np.float32)
-a = random.randn(1000, 1000).astype(np.float32)
-
-b = np.zeros_like(a)
-e = np.zeros_like(a)
-anchor = (0, 0)
+    [20,  50,  80,  50, 20, 1],
+    [50, 100, 140, 100, 50, 1],
+    [90, 160, 200, 160, 90, 1],
+    [50, 100, 140, 100, 50, 1],
+    [20,  50,  80,  50, 20, 1]], dtype=np.float32)
 
 
-t = time.time()
-pyconvolve(a, b, kernel, anchor=anchor)
-print "sc", (time.time() - t)*1E3
+@contextlib.contextmanager
+def timed_exec(times):
+    """Add time used inside a with-block to list of `times`.
 
-t = time.time()
-cv.Filter2D(a, e, kernel, anchor=anchor)
-print "cv", (time.time() - t)*1E3
+    From ActiveState Code Recipe 498113
+    """
+    start = time.clock()
+    try:
+        yield
+    finally:
+        end = time.clock()
+        times.append(end - start)
 
-from scipy.ndimage import convolve
-t = time.time()
-c = convolve(a, kernel)
-print "nd", (time.time() - t)*1E3
-k = 1
-#print b[0, :]#[5:10,5:10]
-#print e[0, :]#[5:10,5:10]
-#print b[-1, :]#[5:10,5:10]
-#print e[-1,:]#[5:10,5:10]
-#print c[5:10,5:10]
-print np.sum(b - e)
-for i in range(100000):
-    kx, ky = [random.randint(1, 10) for k in range(2)]
-    #kx, ky = [7, 9]
-    image_x, image_y = [random.randint(1, 1000) for k in range(2)]
-    #image_x, image_y = [300, 1]
-    kernel = random.randn(ky, kx).astype(np.float32)
-    image = random.randn(image_y, image_x).astype(np.float32)
-    sci_out = np.empty_like(image)
-    cv_out = np.empty_like(image)
-    anchor = (random.randint(0, kx),random.randint(0, ky))
-    print (ky, kx), (image_y, image_x), anchor
-    print "sci"
-    pyconvolve(image, sci_out, kernel, anchor=anchor)
-    print "cv"
-    cv.Filter2D(image, cv_out, kernel, anchor=anchor)
-    testing.assert_equal(np.sum(sci_out - cv_out), 0)
+
+def profile():
+    a = np.random.randn(1000, 1000).astype(np.float32)
+
+    out_skimage = np.zeros_like(a)
+    out_opencv = np.zeros_like(a)
+
+    times = []
+    pkgs = ['skimage', 'ndimage', 'opencv']
+
+    anchor = (0, 0)
+    with timed_exec(times):
+        pyconvolve(a, out_skimage, kernel, anchor=anchor)
+
+    with timed_exec(times):
+        out_ndimage = ndconvolve(a, kernel)
+
+    if opencv_available:
+        with timed_exec(times):
+            cv.Filter2D(a, out_opencv, kernel, anchor=anchor)
+
+    print "Timings:"
+    print "~" * 20
+    for p, t in zip(pkgs, times):
+        print '%s: %.3f secs' % (p, t)
+
+    if opencv_available:
+        assert_close(out_skimage, out_opencv)
+    # Convolution output from skimage does not match that of scipy.ndimage.
+    #assert_close(out_skimage, out_ndimage)
+
+
+def test_vs_opencv():
+
+    for i in range(10):
+        kx, ky = [np.random.randint(1, 10) for k in range(2)]
+        image_x, image_y = [np.random.randint(1, 1000) for k in range(2)]
+        kernel = np.random.randn(ky, kx).astype(np.float32)
+        image = np.random.randn(image_y, image_x).astype(np.float32)
+
+        sci_out = np.empty_like(image)
+        cv_out = np.empty_like(image)
+        anchor = (np.random.randint(0, kx),np.random.randint(0, ky))
+
+        pyconvolve(image, sci_out, kernel, anchor=anchor)
+
+        cv.Filter2D(image, cv_out, kernel, anchor=anchor)
+        assert_close(sci_out, cv_out)
 
 
 if __name__ == '__main__':
+    profile()
     testing.run_module_suite()
 

@@ -8,6 +8,7 @@ cdef extern from "convolve.h":
                   int kernel_width, int kernel_height,
                   int anchor_x, int anchor_y)
 
+
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def pyconvolve(np.ndarray[float, ndim=2, mode="c"] image,
