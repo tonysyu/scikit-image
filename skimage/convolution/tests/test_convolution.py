@@ -40,7 +40,6 @@ def timed_exec(times):
 def profile():
     a = np.random.randn(1000, 1000).astype(np.float32)
 
-    out_skimage = np.zeros_like(a)
     out_opencv = np.zeros_like(a)
 
     times = []
@@ -48,7 +47,7 @@ def profile():
 
     anchor = (0, 0)
     with timed_exec(times):
-        pyconvolve(a, out_skimage, kernel, anchor=anchor)
+        out_skimage = pyconvolve(a, kernel, anchor=anchor)
 
     with timed_exec(times):
         out_ndimage = ndconvolve(a, kernel)
@@ -76,14 +75,13 @@ def test_vs_opencv():
         kernel = np.random.randn(ky, kx).astype(np.float32)
         image = np.random.randn(image_y, image_x).astype(np.float32)
 
-        sci_out = np.empty_like(image)
         cv_out = np.empty_like(image)
         anchor = (np.random.randint(0, kx),np.random.randint(0, ky))
 
-        pyconvolve(image, sci_out, kernel, anchor=anchor)
+        sk_out = pyconvolve(image, kernel, anchor=anchor)
 
         cv.Filter2D(image, cv_out, kernel, anchor=anchor)
-        assert_close(sci_out, cv_out)
+        assert_close(sk_out, cv_out)
 
 
 if __name__ == '__main__':

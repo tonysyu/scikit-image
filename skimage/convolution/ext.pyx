@@ -1,4 +1,6 @@
 import cython
+
+import numpy as np
 cimport numpy as np
 
 
@@ -12,14 +14,19 @@ cdef extern from "convolve.h":
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def pyconvolve(np.ndarray[float, ndim=2, mode="c"] image,
-               np.ndarray[float, ndim=2, mode="c"] dest,
                np.ndarray[float, ndim=2, mode="c"] kernel,
-               anchor=(-1, -1)):
+               anchor=(-1, -1), out=None):
     assert anchor[0] >= -1 and anchor[0] < kernel.shape[1]
     assert anchor[1] >= -1 and anchor[1] < kernel.shape[0]
+
+    if out is None:
+        out = np.zeros_like(image)
+    cdef np.ndarray[float, ndim=2, mode="c"] dest = out
 
     convolve(<float*> image.data, <float*> dest.data, <float*> kernel.data,
              image.shape[1], image.shape[0],
              kernel.shape[1], kernel.shape[0],
              anchor[0], anchor[1])
+
+    return dest
 
