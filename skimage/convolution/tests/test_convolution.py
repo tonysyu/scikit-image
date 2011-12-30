@@ -67,6 +67,7 @@ def profile():
     #assert_close(out_skimage, out_ndimage)
 
 
+@testing.dec.skipif(not opencv_available)
 def test_vs_opencv():
 
     for i in range(10):
