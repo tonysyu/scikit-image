@@ -3,7 +3,6 @@ import cython
 import numpy as np
 cimport numpy as np
 
-
 cdef extern from "convolve.h":
     void convolve(float* src, float* dst, float* kernel,
                   int width, int height,
