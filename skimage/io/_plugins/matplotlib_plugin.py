@@ -1,9 +1,16 @@
 import matplotlib.pyplot as plt
 
-def imshow(*args, **kwargs):
+def imshow(image, fancy=False, **kwargs):
     kwargs.setdefault('interpolation', 'nearest')
     kwargs.setdefault('cmap', 'gray')
-    plt.imshow(*args, **kwargs)
+
+    if fancy:
+        from .mplvi import mplviewer
+        return mplviewer(image, **kwargs)
+    else:
+        ax = plt.axes()
+        ax.imshow(image, **kwargs)
+
 
 imread = plt.imread
 show = plt.show
